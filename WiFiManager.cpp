@@ -1696,13 +1696,13 @@ String WiFiManager::getFileList() {
     String fileName = file.name();
     String fileSize = formatBytes(file.size());
 
-    item.replace(FPSTR(T_fn), filename);
+    item.replace(FPSTR(T_fn), fileName);
     item.replace(FPSTR(T_fs), fileSize);
-    item.replace(FPSTR(T_fl), WiFi.localIP().toString() + "/" + filename);
+    item.replace(FPSTR(T_fl), WiFi.localIP().toString() + "/" + fileName);
     page += item;
     file = root.openNextFile();
   }
-  return page
+  return page;
 }
 
 String WiFiManager::getIpForm(String id, String title, String value){
@@ -2396,7 +2396,7 @@ void WiFiManager::handleErase(boolean opt) {
 
 bool WiFiManager::handleFileRead(String path) {
 #ifdef WM_DEBUG_LEVEL
-  DEBUG_WM(F("handleFileRead: ", path));
+  DEBUG_WM(DEBUG_VERBOSE, (String)(F("handleFileRead: ")) + path);
 #endif
   if (path.endsWith("/")) path += "index.htm";
   String contentType = getContentType(path);
@@ -2414,7 +2414,7 @@ bool WiFiManager::handleFileRead(String path) {
  * HTTPD CALLBACK 404
  */
 void WiFiManager::handleNotFound() {
-  if (handleFileRead(server->uri)) return;
+  if (handleFileRead(server->uri())) return;
   if (captivePortal()) return; // If captive portal redirect instead of displaying the page
   handleRequest();
   String message = FPSTR(S_notfound); // @token notfound
@@ -3461,7 +3461,7 @@ bool WiFiManager::exists(String path) {
   File file = SPIFFS.open(path, "r");
   if (!file.isDirectory()) {
     file.close();
-    return false
+    return false;
   }
   file.close();
   return true;

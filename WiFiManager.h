@@ -650,7 +650,7 @@ class WiFiManager
     void          handleWifiSave();
     void          handleInfo();
     void          handleReset();
-    void          handleFileRead(String path);
+    bool          handleFileRead(String path);
     void          handleNotFound();
     void          handleExit();
     void          handleClose();
@@ -737,7 +737,7 @@ class WiFiManager
 
     //helpers
     bool          exists(String path);
-    String        getContentType(String filename)
+    String        getContentType(String filename);
     boolean       isIp(String str);
     String        toStringIp(IPAddress ip);
     boolean       validApPassword();
