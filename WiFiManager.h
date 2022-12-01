@@ -660,6 +660,8 @@ class WiFiManager
     void          handleWiFiStatus();
     void          handleRequest();
     void          handleParamSave();
+    void          handleFormatConfirm();
+    void          handleFormat();
     void          doParamSave();
 
     boolean       captivePortal();

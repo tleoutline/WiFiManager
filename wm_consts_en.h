@@ -48,6 +48,9 @@ const char R_erase[]              PROGMEM = "/erase";
 const char R_status[]             PROGMEM = "/status";
 const char R_update[]             PROGMEM = "/update";
 const char R_updatedone[]         PROGMEM = "/u";
+const char R_formatconfirm[]      PROGMEM = "/formatConfirm";
+const char R_format[]             PROGMEM = "/format";
+
 
 
 //Strings
@@ -80,8 +83,7 @@ const char T_r[]                  PROGMEM = "{r}"; // @token r
 const char T_R[]                  PROGMEM = "{R}"; // @token R
 const char T_h[]                  PROGMEM = "{h}"; // @token h
 const char T_fn[]                 PROGMEM = "{fn}"; // @token fn
-const char T_fl[]                 PROGMEM = "{fl}"; // @token fl
-const char T_fs[]                 PROGMEM = "{fs}"; // @token fh
+const char T_fs[]                 PROGMEM = "{fs}"; // @token fs
 
 // http
 const char HTTP_HEAD_CL[]         PROGMEM = "Content-Length";

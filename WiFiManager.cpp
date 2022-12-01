@@ -652,6 +652,8 @@ void WiFiManager::setupHTTPServer(){
   server->on(WM_G(R_close),      std::bind(&WiFiManager::handleClose, this));
   server->on(WM_G(R_erase),      std::bind(&WiFiManager::handleErase, this, false));
   server->on(WM_G(R_status),     std::bind(&WiFiManager::handleWiFiStatus, this));
+  server->on(WM_G(R_formatConfrim), std::bind(&WiFiManager::handleFormatConfirm, this));
+  server->on(WM_G(R_format), std::bind(&WiFiManager::handleFormat, this));
   server->onNotFound (std::bind(&WiFiManager::handleNotFound, this));
   
   server->on(WM_G(R_update), std::bind(&WiFiManager::handleUpdate, this));
@@ -1332,14 +1334,17 @@ void WiFiManager::handleRoot() {
   handleRequest();
   String page = getHTTPHead(_title); // @token options @todo replace options with title
   String str  = FPSTR(HTTP_ROOT_MAIN); // @todo custom title
+  String fileList = getFileList();
+
   str.replace(FPSTR(T_t),_title);
   str.replace(FPSTR(T_v),configPortalActive ? _apName : (getWiFiHostname() + " - " + WiFi.localIP().toString())); // use ip if ap is not active for heading @todo use hostname?
   page += str;
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += getMenuOut();
+  if (fileLise != "") page += FPSTR(HTML_FORMAT_MENU);
   reportStatus(page);
   page += HTTP_BR;
-  page += getFileList();
+  page += fileList;
   page += FPSTR(HTTP_END);
 
   HTTPSend(page);
@@ -1698,11 +1703,38 @@ String WiFiManager::getFileList() {
 
     item.replace(FPSTR(T_fn), fileName);
     item.replace(FPSTR(T_fs), fileSize);
-    item.replace(FPSTR(T_fl), WiFi.localIP().toString() + "/" + fileName);
     page += item;
     file = root.openNextFile();
   }
   return page;
+}
+
+WiFiManager::handleFormatConfirm() {
+#ifdef WM_DEBUG_LEVEL
+  DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format Confirm"));
+#endif
+  handleRequest();
+  String page = getHTTPHead(F("Format Confirmation"));
+  page += FPSTR(HTML_FORMAT_MAIN);
+  page += getFileList();
+  page += FPSTR(HTML_FORMAT_CONFIRM_MENU);
+  page += FPSTR(HTML_FORMAT_CANCEL_MENU);
+  reportStatus(page);
+  page += FPSTR(HTTP_END);
+  HTTPSend(page);
+}
+
+WiFiManager::handleFormat() {
+#ifdef WM_DEBUG_LEVEL
+  DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format"));
+#endif
+  handleRequest();
+  String page = getHTTPHead(F("Format"));
+  page += F("<div>Formatting...</div><br/>");
+  page += F("<form action='/' method='get'><button>Exit</button></form>");  // MENU_EXIT
+  reportStatus(page);
+  page += FPSTR(HTTP_END);
+  HTTPSend(page);
 }
 
 String WiFiManager::getIpForm(String id, String title, String value){
