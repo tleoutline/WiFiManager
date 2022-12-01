@@ -652,7 +652,7 @@ void WiFiManager::setupHTTPServer(){
   server->on(WM_G(R_close),      std::bind(&WiFiManager::handleClose, this));
   server->on(WM_G(R_erase),      std::bind(&WiFiManager::handleErase, this, false));
   server->on(WM_G(R_status),     std::bind(&WiFiManager::handleWiFiStatus, this));
-  server->on(WM_G(R_formatConfrim), std::bind(&WiFiManager::handleFormatConfirm, this));
+  server->on(WM_G(R_formatconfirm), std::bind(&WiFiManager::handleFormatConfirm, this));
   server->on(WM_G(R_format), std::bind(&WiFiManager::handleFormat, this));
   server->onNotFound (std::bind(&WiFiManager::handleNotFound, this));
   
@@ -1341,7 +1341,7 @@ void WiFiManager::handleRoot() {
   page += str;
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += getMenuOut();
-  if (fileLise != "") page += FPSTR(HTML_FORMAT_MENU);
+  if (fileList != "") page += FPSTR(HTML_FORMAT_MENU);
   reportStatus(page);
   page += HTTP_BR;
   page += fileList;
@@ -1709,7 +1709,7 @@ String WiFiManager::getFileList() {
   return page;
 }
 
-WiFiManager::handleFormatConfirm() {
+void WiFiManager::handleFormatConfirm() {
 #ifdef WM_DEBUG_LEVEL
   DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format Confirm"));
 #endif
@@ -1724,7 +1724,7 @@ WiFiManager::handleFormatConfirm() {
   HTTPSend(page);
 }
 
-WiFiManager::handleFormat() {
+void WiFiManager::handleFormat() {
 #ifdef WM_DEBUG_LEVEL
   DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format"));
 #endif
