@@ -62,6 +62,8 @@ const char HTTP_ITEM_QP[]          PROGMEM = "<div class='q {h}'>{r}%</div>"; //
 const char HTTP_ITEM[]             PROGMEM = "<div><a href='#p' onclick='c(this)' data-ssid='{V}'>{v}</a>{qi}{qp}</div>"; // {q} = HTTP_ITEM_QI, {r} = HTTP_ITEM_QP
 // const char HTTP_ITEM[]            PROGMEM = "<div><a href='#p' onclick='c(this)'>{v}</a> {R} {r}% {q} {e}</div>"; // test all tokens
 
+const char HTTP_FILE_LIST[]				 PROGMEM = "<div><a href='{fl}'>{fn}</a><div class='q'>{fs}</div></div>"; // {fl} file url, {fn} file name, {fs} file size
+
 const char HTTP_FORM_START[]       PROGMEM = "<form method='POST' action='{v}'>";
 const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>SSID</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>Password</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' onclick='f()'> Show Password";
 const char HTTP_FORM_WIFI_END[]    PROGMEM = "";

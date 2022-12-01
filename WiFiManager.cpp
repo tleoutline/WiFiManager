@@ -1338,6 +1338,8 @@ void WiFiManager::handleRoot() {
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += getMenuOut();
   reportStatus(page);
+  page += HTTP_BR;
+  page += getFileList();
   page += FPSTR(HTTP_END);
 
   HTTPSend(page);
@@ -1668,6 +1670,39 @@ String WiFiManager::WiFiManager::getScanItemOut(){
     }
 
     return page;
+}
+
+String WiFiManager::formatBytes(size_t bytes) {
+  if (bytes < 1024) {
+    return String(bytes) + "B";
+  }
+  else if (bytes < (1024 * 1024)) {
+    return String(bytes / 1024.0) + "KB";
+  }
+  else if (bytes < (1024 * 1024 * 1024)) {
+    return String(bytes / 1024.0 / 1024.0) + "MB";
+  }
+  else {
+    return String(bytes / 1024.0 / 1024.0 / 1024.0) + "GB";
+  }
+}
+
+String WiFiManager::getFileList() {
+  String page;
+  File root = SPIFFS.open("/");
+  File file = root.openNextFile();
+  while (file) {
+    String item = FPSTR(HTTP_FILE_LIST);
+    String fileName = file.name();
+    String fileSize = formatBytes(file.size());
+
+    item.replace(FPSTR(T_fn), filename);
+    item.replace(FPSTR(T_fs), fileSize);
+    item.replace(FPSTR(T_fl), WiFi.localIP().toString() + "/" + filename);
+    page += item;
+    file = root.openNextFile();
+  }
+  return page
 }
 
 String WiFiManager::getIpForm(String id, String title, String value){
@@ -2359,10 +2394,27 @@ void WiFiManager::handleErase(boolean opt) {
   }	
 }
 
+bool WiFiManager::handleFileRead(String path) {
+#ifdef WM_DEBUG_LEVEL
+  DEBUG_WM(F("handleFileRead: ", path));
+#endif
+  if (path.endsWith("/")) path += "index.htm";
+  String contentType = getContentType(path);
+  if (exists(path)) {
+    File file = SPIFFS.open(path, "r");
+    server->streamFile(file, contentType);
+    file.close();
+    return true;
+  }
+  return false;
+}
+
+
 /** 
  * HTTPD CALLBACK 404
  */
 void WiFiManager::handleNotFound() {
+  if (handleFileRead(server->uri)) return;
   if (captivePortal()) return; // If captive portal redirect instead of displaying the page
   handleRequest();
   String message = FPSTR(S_notfound); // @token notfound
@@ -3403,6 +3455,35 @@ int WiFiManager::getRSSIasQuality(int RSSI) {
     quality = 2 * (RSSI + 100);
   }
   return quality;
+}
+
+bool WiFiManager::exists(String path) {
+  File file = SPIFFS.open(path, "r");
+  if (!file.isDirectory()) {
+    file.close();
+    return false
+  }
+  file.close();
+  return true;
+}
+
+String WiFiManager::getContentType(String filename) {
+  if (server->hasArg("download")) {
+    return "application/octet-stream";
+  }
+  else if (filename.endsWith(".htm")) {
+    return "text/html";
+  }
+  else if (filename.endsWith(".html")) {
+    return "text/html";
+  }
+  else if (filename.endsWith(".css")) {
+    return "text/css";
+  }
+  else if (filename.endsWith(".js")) {
+    return "application/javascript";
+  }
+  return "text/plain";
 }
 
 /** Is this an IP? */

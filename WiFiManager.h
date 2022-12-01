@@ -22,6 +22,7 @@
 
 #include <vector>
 
+#define WM_SPIFFS
 #define WM_MDNS            // includes MDNS, also set MDNS with sethostname
 // #define WM_FIXERASECONFIG  // use erase flash fix
 // #define WM_ERASE_NVS       // esp32 erase(true) will erase NVS 
@@ -107,6 +108,10 @@
     #ifdef WM_MDNS
         #include <ESPmDNS.h>
     #endif
+
+#ifdef WM_SPIFFS
+#include <SPIFFS.h>
+#endif
 
     #ifdef WM_RTC
         #ifdef ESP_IDF_VERSION_MAJOR // IDF 4+
@@ -645,6 +650,7 @@ class WiFiManager
     void          handleWifiSave();
     void          handleInfo();
     void          handleReset();
+    void          handleFileRead(String path);
     void          handleNotFound();
     void          handleExit();
     void          handleClose();
@@ -727,10 +733,15 @@ class WiFiManager
     String        getStaticOut();
     String        getHTTPHead(String title);
     String        getMenuOut();
+    String        getFileList();
+
     //helpers
+    bool          exists(String path);
+    String        getContentType(String filename)
     boolean       isIp(String str);
     String        toStringIp(IPAddress ip);
     boolean       validApPassword();
+    String        formatBytes(size_t bytes);
     String        encryptionTypeStr(uint8_t authmode);
     void          reportStatus(String &page);
     String        getInfoData(String id);
