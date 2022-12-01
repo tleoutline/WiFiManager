@@ -1,5 +1,6 @@
-**Modified by Apipoo Paleeya**
-Added SPIFFS file browser
+## Modified by Apipoo Paleeya
+
+* Added SPIFFS file browser
 
 # WiFiManager
 ## DEVELOPMENT Version
