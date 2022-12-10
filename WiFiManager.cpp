@@ -1750,6 +1750,7 @@ void WiFiManager::handleFormat() {
   reportStatus(page);
   page += FPSTR(HTTP_END);
   HTTPSend(page);
+  formatFS();
 }
 
 String WiFiManager::getIpForm(String id, String title, String value) {
