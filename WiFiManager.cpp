@@ -1701,8 +1701,8 @@ void WiFiManager::formatFS() {
   File root = SPIFFS.open("/");
   File file = root.openNextFile();
   while (file) {
-    String fileName = "/" + file.name();
-    SPIFFS.remove(fileName);
+    String fileName = file.name();
+    SPIFFS.remove("/" + fileName);
     file = root.openNextFile();
   }
 }
