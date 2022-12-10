@@ -1701,7 +1701,7 @@ void WiFiManager::formatFS() {
   File root = SPIFFS.open("/");
   File file = root.openNextFile();
   while (file) {
-    String fileName = file.name();
+    String fileName = "/" + file.name();
     SPIFFS.remove(fileName);
     file = root.openNextFile();
   }
@@ -3519,7 +3519,6 @@ bool WiFiManager::exists(String path) {
 }
 
 String WiFiManager::getContentType(String filename) {
-  log_i("get contnent: %S", filename.c_str());
   if (server->hasArg("download")) {
     return "application/octet-stream";
   }
