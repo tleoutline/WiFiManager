@@ -1346,7 +1346,7 @@ void WiFiManager::handleRoot() {
   page += str;
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += getMenuOut();
-  page += FPSTR(HTML_FORMAT_MENU)
+  page += FPSTR(HTML_FORMAT_MENU);
   if (fileList != "") page += FPSTR(HTML_DEL_ALL_FILES_MENU);
   reportStatus(page);
   page += HTTP_BR;
