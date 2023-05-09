@@ -48,6 +48,8 @@ const char R_erase[]              PROGMEM = "/erase";
 const char R_status[]             PROGMEM = "/status";
 const char R_update[]             PROGMEM = "/update";
 const char R_updatedone[]         PROGMEM = "/u";
+const char R_delallconfirm[]      PROGMEM = "/delAllConfirm";
+const char R_delall[]             PROGMEM = "/delAll";
 const char R_formatconfirm[]      PROGMEM = "/formatConfirm";
 const char R_format[]             PROGMEM = "/format";
 

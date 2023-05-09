@@ -64,10 +64,15 @@ const char HTTP_ITEM[]             PROGMEM = "<div><a href='#p' onclick='c(this)
 
 const char HTTP_FILE_LIST[]				 PROGMEM = "<div><a href='{fn}'>{fn}</a><div class='q'>{fs}</div></div>"; // {fn} file name, {fs} file size
 
-const char HTML_FORMAT_MENU[]			 PROGMEM = "<form action='/formatConfirm'		method='get'><button>Format</button></form><br/>";
-const char HTML_FORMAT_CONFIRM_MENU[]	 		PROGMEM = "<form action='/format'					method='get'><button>Confirm</button></form><br/>";
-const char HTML_FORMAT_CANCEL_MENU[]			PROGMEM = "<form action='/' 	 							method='get'><button>Cancel</button></form><br/>";
-const char HTML_FORMAT_MAIN[]			 PROGMEM = "<div><h3>Confirm Format?</h3></div><br/><div>Flash memory contains following files</div><br/>";
+const char HTML_DEL_ALL_FILES_MENU[]			 PROGMEM = "<form action='/delAllConfirm'	method='get'><button>Delete all files</button></form><br/>";
+const char HTML_DEL_ALL_FILES_CONFIRM_MENU[]	 		PROGMEM = "<form action='/delAll'	method='get'><button>Confirm</button></form><br/>";
+const char HTML_DEL_ALL_FILES_CANCEL_MENU[]			PROGMEM = "<form action='/'	method='get'><button>Cancel</button></form><br/>";
+const char HTML_DEL_ALL_FILES_MAIN[]			 PROGMEM = "<div><h3>Confirm Delete all files?</h3></div><br/><div>Flash memory contains following files</div><br/>";
+
+const char HTML_FORMAT_MENU[]			 PROGMEM = "<form action='/formatConfirm'	method='get'><button>Format</button></form><br/>";
+const char HTML_FORMAT_CONFIRM_MENU[]	 		PROGMEM = "<form action='/format'	method='get'><button>Confirm</button></form><br/>";
+const char HTML_FORMAT_CANCEL_MENU[]			PROGMEM = "<form action='/' 	 	method='get'><button>Cancel</button></form><br/>";
+const char HTML_FORMAT_MAIN[]			 PROGMEM = "<div><h3>Confirm Format?</h3></div><br/>";
 
 const char HTTP_FORM_START[]       PROGMEM = "<form method='POST' action='{v}'>";
 const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>SSID</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>Password</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' onclick='f()'> Show Password";

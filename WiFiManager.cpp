@@ -654,6 +654,8 @@ void WiFiManager::setupHTTPServer() {
   server->on(WM_G(R_close), std::bind(&WiFiManager::handleClose, this));
   server->on(WM_G(R_erase), std::bind(&WiFiManager::handleErase, this, false));
   server->on(WM_G(R_status), std::bind(&WiFiManager::handleWiFiStatus, this));
+  server->on(WM_G(R_delallconfirm), std::bind(&WiFiManager::handleDeleteAllFilesConfirm, this));
+  server->on(WM_G(R_delall), std::bind(&WiFiManager::handleDeleteAllFiles, this));
   server->on(WM_G(R_formatconfirm), std::bind(&WiFiManager::handleFormatConfirm, this));
   server->on(WM_G(R_format), std::bind(&WiFiManager::handleFormat, this));
   server->onNotFound(std::bind(&WiFiManager::handleNotFound, this));
@@ -1344,7 +1346,8 @@ void WiFiManager::handleRoot() {
   page += str;
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += getMenuOut();
-  if (fileList != "") page += FPSTR(HTML_FORMAT_MENU);
+  page += FPSTR(HTML_FORMAT_MENU)
+  if (fileList != "") page += FPSTR(HTML_DEL_ALL_FILES_MENU);
   reportStatus(page);
   page += HTTP_BR;
   page += fileList;
@@ -1697,7 +1700,7 @@ String WiFiManager::formatBytes(size_t bytes) {
   }
 }
 
-void WiFiManager::formatFS() {
+void WiFiManager::deleteAllFiles() {
   File root = SPIFFS.open("/");
   File file = root.openNextFile();
   while (file) {
@@ -1724,6 +1727,35 @@ String WiFiManager::getFileList() {
   return page;
 }
 
+void WiFiManager::handleDeleteAllFilesConfirm() {
+#ifdef WM_DEBUG_LEVEL
+  DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Delete all files Confirm"));
+#endif
+  handleRequest();
+  String page = getHTTPHead(F("Delete all files Confirmation"));
+  page += FPSTR(HTML_DEL_ALL_FILES_MAIN);
+  page += getFileList();
+  page += FPSTR(HTML_DEL_ALL_FILES_CONFIRM_MENU);
+  page += FPSTR(HTML_DEL_ALL_FILES_CANCEL_MENU);
+  reportStatus(page);
+  page += FPSTR(HTTP_END);
+  HTTPSend(page);
+}
+
+void WiFiManager::handleDeleteAllFiles() {
+#ifdef WM_DEBUG_LEVEL
+  DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format"));
+#endif
+  handleRequest();
+  String page = getHTTPHead(F("Format"));
+  page += F("<div>Deleting...</div><br/>");
+  page += F("<form action='/' method='get'><button>Exit</button></form>");  // MENU_EXIT
+  reportStatus(page);
+  page += FPSTR(HTTP_END);
+  HTTPSend(page);
+  deleteAllFiles();
+}
+
 void WiFiManager::handleFormatConfirm() {
 #ifdef WM_DEBUG_LEVEL
   DEBUG_WM(DEBUG_VERBOSE, F("<- HTTP Format Confirm"));
@@ -1731,7 +1763,6 @@ void WiFiManager::handleFormatConfirm() {
   handleRequest();
   String page = getHTTPHead(F("Format Confirmation"));
   page += FPSTR(HTML_FORMAT_MAIN);
-  page += getFileList();
   page += FPSTR(HTML_FORMAT_CONFIRM_MENU);
   page += FPSTR(HTML_FORMAT_CANCEL_MENU);
   reportStatus(page);
@@ -1745,12 +1776,12 @@ void WiFiManager::handleFormat() {
 #endif
   handleRequest();
   String page = getHTTPHead(F("Format"));
-  page += F("<div>Formatting...</div><br/>");
+  page += F("<div>Formatting... Please wait 30-60 seconds</div><br/>");
   page += F("<form action='/' method='get'><button>Exit</button></form>");  // MENU_EXIT
   reportStatus(page);
   page += FPSTR(HTTP_END);
   HTTPSend(page);
-  formatFS();
+  SPIFFS.format();
 }
 
 String WiFiManager::getIpForm(String id, String title, String value) {

@@ -14,6 +14,9 @@
 #ifndef WiFiManager_h
 #define WiFiManager_h
 
+#define ESP32
+
+
 #if defined(ESP8266) || defined(ESP32)
 
 #ifdef ESP8266
@@ -661,6 +664,8 @@ private:
     void          handleParamSave();
     void          handleFormatConfirm();
     void          handleFormat();
+    void          handleDeleteAllFilesConfirm();
+    void          handleDeleteAllFiles();
     void          doParamSave();
 
     boolean       captivePortal();
@@ -743,7 +748,7 @@ private:
     String        toStringIp(IPAddress ip);
     boolean       validApPassword();
     String        formatBytes(size_t bytes);
-    void          formatFS();
+    void          deleteAllFiles();
     String        encryptionTypeStr(uint8_t authmode);
     void          reportStatus(String& page);
     String        getInfoData(String id);
